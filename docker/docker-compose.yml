@@ -1,0 +1,37 @@
+# sky-chat 基础设施：PostgreSQL(pgvector) + Redis
+# 用法: docker compose -f docker/docker-compose.yml up -d
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: skychat-postgres
+    environment:
+      POSTGRES_DB: skychat
+      POSTGRES_USER: skychat
+      POSTGRES_PASSWORD: skychat123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skychat -d skychat"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: skychat-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
+  redisdata:

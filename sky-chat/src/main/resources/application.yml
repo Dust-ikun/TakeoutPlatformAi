@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: sky-chat
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/skychat
+    username: skychat
+    password: ${PG_PASSWORD:skychat123}
+  ai:
+    # DashScope 提供 OpenAI 兼容网关；Key 放 application-local.yml（不入 git）
+    openai:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      api-key: ${DASHSCOPE_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-v3
+    vectorstore:
+      pgvector:
+        dimensions: 1024
+        initialize-schema: true   # W1 便利开关：自动建表；生产/面试口径改为手工 schema
+        distance-type: COSINE_DISTANCE
+
+logging:
+  level:
+    com.sky.chat: debug

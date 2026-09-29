@@ -15,3 +15,9 @@ Thumbs.db
 
 # Local env config (private credentials, keep local only)
 sky-server/src/main/resources/application-dev.yml
+sky-chat/src/main/resources/application-local.yml
+.env
+.env.*
+
+# WorkBuddy session tooling (local only)
+.workbuddy/
