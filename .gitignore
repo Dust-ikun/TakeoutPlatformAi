@@ -1,0 +1,17 @@
+**/target/
+.idea
+*.iml
+*.class
+*Test.java
+**/test/
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local env config (private credentials, keep local only)
+sky-server/src/main/resources/application-dev.yml
