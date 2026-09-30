@@ -31,3 +31,10 @@ spring:
 logging:
   level:
     com.sky.chat: debug
+
+# W2 置信度分档阈值（初始值来自 W1 验收观察，待评测集跑分后调参）
+sky:
+  chat:
+    confidence:
+      high-threshold: 0.55
+      mid-threshold: 0.40

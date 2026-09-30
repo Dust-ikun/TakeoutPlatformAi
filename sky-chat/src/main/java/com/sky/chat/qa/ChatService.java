@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- * 非流式问答（W1 最小链路）
- * W5 升级 SSE 流式 + 会话记忆；W2 加三档置信度拒答
+ * 非流式问答
+ * W1 最小链路 → W2 接入置信度三档分档拒答；W5 升级 SSE 流式 + 会话记忆
  */
 @Service
 public class ChatService {
+
+    public static final String REFUSE_MESSAGE = "抱歉，这个问题我暂时无法确定，已为您转接人工客服。";
+    private static final String MEDIUM_DISCLAIMER = "（以上回答所依据的资料匹配度一般，仅供参考，如需准确信息请以 APP 展示为准或转人工客服。）";
 
     private static final String SYSTEM_PROMPT = """
             你是"苍穹外卖"平台的智能客服小穹，语气友好、简洁。
@@ -25,8 +28,10 @@ public class ChatService {
 
     private final ChatClient chatClient;
     private final RetrievalService retrievalService;
+    private final ConfidenceGate confidenceGate;
 
-    public ChatService(ChatClient.Builder chatClientBuilder, RetrievalService retrievalService) {
+    public ChatService(ChatClient.Builder chatClientBuilder, RetrievalService retrievalService,
+                       ConfidenceGate confidenceGate) {
         this.chatClient = chatClientBuilder
                 .defaultOptions(org.springframework.ai.openai.OpenAiChatOptions.builder()
                         .model("qwen-plus")
@@ -34,9 +39,11 @@ public class ChatService {
                         .build())
                 .build();
         this.retrievalService = retrievalService;
+        this.confidenceGate = confidenceGate;
     }
 
-    public record ChatResult(String answer, List<Citation> citations) {
+    public record ChatResult(String answer, List<Citation> citations,
+                             String tier, double top1Score) {
     }
 
     public record Citation(String label, double score) {
@@ -44,8 +51,13 @@ public class ChatService {
 
     public ChatResult ask(String question) {
         List<RetrievalService.RetrievedChunk> chunks = retrievalService.search(question, 5, null);
-        if (chunks.isEmpty()) {
-            return new ChatResult("抱歉，这个问题我暂时无法确定，已为您转接人工客服。", List.of());
+
+        double top1 = chunks.isEmpty() ? 0.0 : chunks.get(0).score();
+        ConfidenceGate.Tier tier = confidenceGate.evaluate(top1);
+
+        // LOW：不调 LLM，直接拒答（省 token + 防幻觉）
+        if (tier == ConfidenceGate.Tier.LOW) {
+            return new ChatResult(REFUSE_MESSAGE, List.of(), tier.name(), top1);
         }
 
         StringBuilder refs = new StringBuilder();
@@ -62,12 +74,16 @@ public class ChatService {
                 .call()
                 .content();
 
-        // 引用列表：取 Top-K 的来源标签（W2 将基于回答实际引用做对齐）
+        if (tier == ConfidenceGate.Tier.MEDIUM) {
+            answer = answer + "\n" + MEDIUM_DISCLAIMER;
+        }
+
+        // 引用列表：取 Top-K 的来源标签（后续可基于回答实际引用做对齐）
         List<Citation> citations = IntStream.range(0, Math.min(chunks.size(), 3))
                 .mapToObj(i -> new Citation(
                         chunks.get(i).type() + "-" + chunks.get(i).title(),
                         chunks.get(i).score()))
                 .toList();
-        return new ChatResult(answer, citations);
+        return new ChatResult(answer, citations, tier.name(), top1);
     }
 }
