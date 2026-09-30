@@ -1,0 +1,39 @@
+{
+  "version": "v1",
+  "description": "W2 评测集：30 条 = 精确菜名10 + 语义菜品6 + 规则8 + 超纲拒答6。expectedSourceTitles 为检索 hit@5 判定来源（任一命中即 hit）；expectedKeywords 为答案关键词判定（任一命中即 pass）；out_of_scope 类应拒答（shouldRefuse=true）。",
+  "cases": [
+    {"id": "e01", "category": "dish_exact", "question": "剁椒鱼头多少钱一份？", "expectedKeywords": ["66"], "expectedSourceTitles": ["剁椒鱼头"], "shouldRefuse": false},
+    {"id": "e02", "category": "dish_exact", "question": "清蒸鲈鱼的价格是多少？", "expectedKeywords": ["98"], "expectedSourceTitles": ["清蒸鲈鱼"], "shouldRefuse": false},
+    {"id": "e03", "category": "dish_exact", "question": "东坡肘子卖多少钱？", "expectedKeywords": ["138"], "expectedSourceTitles": ["东坡肘子"], "shouldRefuse": false},
+    {"id": "e04", "category": "dish_exact", "question": "梅菜扣肉什么价？", "expectedKeywords": ["58"], "expectedSourceTitles": ["梅菜扣肉"], "shouldRefuse": false},
+    {"id": "e05", "category": "dish_exact", "question": "草鱼2斤的原料有哪些？", "expectedKeywords": ["黄豆芽", "莲藕"], "expectedSourceTitles": ["草鱼2斤"], "shouldRefuse": false},
+    {"id": "e06", "category": "dish_exact", "question": "江团鱼2斤多少钱？", "expectedKeywords": ["119"], "expectedSourceTitles": ["江团鱼2斤"], "shouldRefuse": false},
+    {"id": "e07", "category": "dish_exact", "question": "金汤酸菜牛蛙一份价格是多少？", "expectedKeywords": ["88"], "expectedSourceTitles": ["金汤酸菜牛蛙"], "shouldRefuse": false},
+    {"id": "e08", "category": "dish_exact", "question": "北冰洋多少钱一瓶？", "expectedKeywords": ["4"], "expectedSourceTitles": ["北冰洋"], "shouldRefuse": false},
+    {"id": "e09", "category": "dish_exact", "question": "米饭一份多少钱？", "expectedKeywords": ["2"], "expectedSourceTitles": ["米饭"], "shouldRefuse": false},
+    {"id": "e10", "category": "dish_exact", "question": "平菇豆腐汤是什么价格？", "expectedKeywords": ["6"], "expectedSourceTitles": ["平菇豆腐汤"], "shouldRefuse": false},
+
+    {"id": "s01", "category": "dish_semantic", "question": "有什么辣的鱼推荐？", "expectedKeywords": ["鱼"], "expectedSourceTitles": ["老坛酸菜鱼", "蜀味水煮草鱼", "经典酸菜鮰鱼", "剁椒鱼头"], "shouldRefuse": false},
+    {"id": "s02", "category": "dish_semantic", "question": "想喝点饮料，有什么推荐？", "expectedKeywords": ["王老吉", "北冰洋", "雪花啤酒"], "expectedSourceTitles": ["王老吉", "北冰洋", "雪花啤酒"], "shouldRefuse": false},
+    {"id": "s03", "category": "dish_semantic", "question": "你们的汤类有哪些？", "expectedKeywords": ["鸡蛋汤", "平菇豆腐汤"], "expectedSourceTitles": ["鸡蛋汤", "平菇豆腐汤"], "shouldRefuse": false},
+    {"id": "s04", "category": "dish_semantic", "question": "素菜有什么可以点？", "expectedKeywords": ["小油菜", "娃娃菜", "西兰花", "圆白菜"], "expectedSourceTitles": ["清炒小油菜", "蒜蓉娃娃菜", "清炒西兰花", "炝炒圆白菜"], "shouldRefuse": false},
+    {"id": "s05", "category": "dish_semantic", "question": "主食除了米饭还有什么？", "expectedKeywords": ["馒头"], "expectedSourceTitles": ["米饭", "馒头"], "shouldRefuse": false},
+    {"id": "s06", "category": "dish_semantic", "question": "牛蛙类的菜有哪些？", "expectedKeywords": ["牛蛙"], "expectedSourceTitles": ["金汤酸菜牛蛙", "香锅牛蛙", "馋嘴牛蛙"], "shouldRefuse": false},
+
+    {"id": "r01", "category": "rule", "question": "你们几点营业？", "expectedKeywords": ["09:00", "21:00"], "expectedSourceTitles": ["营业时间"], "shouldRefuse": false},
+    {"id": "r02", "category": "rule", "question": "配送费怎么收？", "expectedKeywords": ["30", "6"], "expectedSourceTitles": ["配送范围与配送费"], "shouldRefuse": false},
+    {"id": "r03", "category": "rule", "question": "我住得比较远，超过3公里还能送吗？", "expectedKeywords": ["3"], "expectedSourceTitles": ["配送范围与配送费"], "shouldRefuse": false},
+    {"id": "r04", "category": "rule", "question": "退款多久能到账？", "expectedKeywords": ["1-3", "工作日"], "expectedSourceTitles": ["退款规则"], "shouldRefuse": false},
+    {"id": "r05", "category": "rule", "question": "商家已经出餐了还能取消订单吗？", "expectedKeywords": ["出餐"], "expectedSourceTitles": ["退款规则"], "shouldRefuse": false},
+    {"id": "r06", "category": "rule", "question": "优惠券怎么领、怎么用？", "expectedKeywords": ["39", "8"], "expectedSourceTitles": ["会员与优惠"], "shouldRefuse": false},
+    {"id": "r07", "category": "rule", "question": "可以开发票吗？", "expectedKeywords": ["发票"], "expectedSourceTitles": ["发票开具"], "shouldRefuse": false},
+    {"id": "r08", "category": "rule", "question": "外卖送超时了怎么办？", "expectedKeywords": ["15", "补偿"], "expectedSourceTitles": ["骑手配送时间"], "shouldRefuse": false},
+
+    {"id": "o01", "category": "out_of_scope", "question": "你们公司CEO是谁？", "expectedKeywords": [], "expectedSourceTitles": [], "shouldRefuse": true},
+    {"id": "o02", "category": "out_of_scope", "question": "帮我写一首关于春天的诗", "expectedKeywords": [], "expectedSourceTitles": [], "shouldRefuse": true},
+    {"id": "o03", "category": "out_of_scope", "question": "明天北京的天气怎么样？", "expectedKeywords": [], "expectedSourceTitles": [], "shouldRefuse": true},
+    {"id": "o04", "category": "out_of_scope", "question": "iPhone 17 Pro 现在卖多少钱？", "expectedKeywords": [], "expectedSourceTitles": [], "shouldRefuse": true},
+    {"id": "o05", "category": "out_of_scope", "question": "美团外卖最近有什么优惠活动？", "expectedKeywords": [], "expectedSourceTitles": [], "shouldRefuse": true},
+    {"id": "o06", "category": "out_of_scope", "question": "苍穹外卖去年的营业收入是多少？", "expectedKeywords": [], "expectedSourceTitles": [], "shouldRefuse": true}
+  ]
+}
