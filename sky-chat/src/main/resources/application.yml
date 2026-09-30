@@ -41,3 +41,6 @@ sky:
     confidence:
       high-threshold: 0.60
       mid-threshold: 0.52
+    # W3 会话记忆滑动窗口（按 conversationId 隔离，进程内存储）
+    memory:
+      window-size: 10
