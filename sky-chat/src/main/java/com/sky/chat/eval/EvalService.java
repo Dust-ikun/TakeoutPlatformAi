@@ -41,9 +41,13 @@ public class EvalService {
         this.confidenceGate = confidenceGate;
         this.objectMapper = objectMapper;
         try (InputStream in = new ClassPathResource("eval/evalset-v1.json").getInputStream()) {
-            this.cases = objectMapper.readValue(in,
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, EvalCase.class));
+            EvalSetFile file = objectMapper.readValue(in, EvalSetFile.class);
+            this.cases = file.cases();
         }
+    }
+
+    /** 评测集文件顶层结构 */
+    record EvalSetFile(String version, String description, List<EvalCase> cases) {
     }
 
     // ---------- 数据结构 ----------

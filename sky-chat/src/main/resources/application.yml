@@ -32,9 +32,12 @@ logging:
   level:
     com.sky.chat: debug
 
-# W2 置信度分档阈值（初始值来自 W1 验收观察，待评测集跑分后调参）
+# W2 置信度分档阈值（依据 evalset-v1 跑分分布定标：
+# 可答题 top1 >= 0.603，超纲题除 o05(0.652) 外 <= 0.455，
+# 阈值取间隔带 [0.455, 0.603] 内 → high=0.60 / mid=0.52；
+# o05 属分数门控不可分的语义邻近样本，由提示词规则兜底拒答）
 sky:
   chat:
     confidence:
-      high-threshold: 0.55
-      mid-threshold: 0.40
+      high-threshold: 0.60
+      mid-threshold: 0.52
