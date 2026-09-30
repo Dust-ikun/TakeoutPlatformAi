@@ -6,6 +6,9 @@ spring:
     name: sky-chat
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+  sql:
+    init:
+      mode: always          # schema.sql 幂等（IF NOT EXISTS）
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/skychat
