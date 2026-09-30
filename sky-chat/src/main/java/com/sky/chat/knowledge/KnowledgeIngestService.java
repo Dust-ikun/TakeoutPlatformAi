@@ -69,6 +69,7 @@ public class KnowledgeIngestService {
         }
 
         // 生成向量 id 并写入（metadata 附 fingerprint，便于追溯）
+        // 分批写入：DashScope embedding 单请求批量上限（text-embedding-v3 为 25），10 一批留余量
         List<String> vectorIds = new ArrayList<>(chunks.size());
         List<Document> documents = new ArrayList<>(chunks.size());
         for (KnowledgeChunker.Chunk c : chunks) {
@@ -80,7 +81,9 @@ public class KnowledgeIngestService {
                     .metadata(c.metadata())
                     .build());
         }
-        vectorStore.add(documents);
+        for (int i = 0; i < documents.size(); i += 10) {
+            vectorStore.add(documents.subList(i, Math.min(i + 10, documents.size())));
+        }
 
         KnowledgeDoc doc = existing != null ? existing : new KnowledgeDoc();
         doc.setDocName(docName);
